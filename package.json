@@ -1,0 +1,93 @@
+{
+  "name": "delimit",
+  "displayName": "Delimit — API Governance",
+  "description": "API governance for AI coding assistants. Catch breaking changes, enforce policies, switch models without losing context.",
+  "version": "0.1.0",
+  "publisher": "delimit-ai",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "openapi",
+    "api",
+    "governance",
+    "breaking-changes",
+    "claude",
+    "codex",
+    "gemini",
+    "mcp",
+    "ci",
+    "linter"
+  ],
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#0f172a",
+    "theme": "dark"
+  },
+  "homepage": "https://delimit.ai",
+  "bugs": {
+    "url": "https://github.com/delimit-ai/delimit-vscode/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/delimit-ai/delimit-vscode"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "delimit.lint",
+        "title": "Delimit: Lint API Spec"
+      },
+      {
+        "command": "delimit.doctor",
+        "title": "Delimit: Check Governance Health"
+      },
+      {
+        "command": "delimit.init",
+        "title": "Delimit: Initialize Governance"
+      },
+      {
+        "command": "delimit.status",
+        "title": "Delimit: Show Status"
+      }
+    ],
+    "configuration": {
+      "title": "Delimit",
+      "properties": {
+        "delimit.autoLint": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically lint OpenAPI specs on save"
+        },
+        "delimit.cliPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to delimit-cli binary (leave empty to use npx)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^2.22.0",
+    "typescript": "^5.3.3"
+  }
+}
