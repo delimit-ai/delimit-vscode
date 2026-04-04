@@ -32,6 +32,25 @@ Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and type "Delimit":
 - [delimit-cli](https://www.npmjs.com/package/delimit-cli) (`npm install -g delimit-cli`)
 - Or use via npx (no install needed, but slower on first run)
 
+## Publishing
+
+Marketplace publishing is wired through [`.github/workflows/publish.yml`](./.github/workflows/publish.yml).
+
+Before the first release:
+
+- Create the `delimit-ai` publisher in VS Code Marketplace
+- Create an Azure DevOps personal access token and store it as `VSCE_PAT`
+- Create an Open VSX token and store it as `OVSX_PAT`
+- Create a GitHub release or run the workflow manually
+
+Local packaging:
+
+```bash
+npm ci
+npm run compile
+npx @vscode/vsce package
+```
+
 ## How it works
 
 The extension wraps the `delimit-cli` tool, which detects 27 types of API changes (17 breaking, 10 non-breaking) across OpenAPI specs. It supports three policy presets (strict, default, relaxed) and custom YAML policies.

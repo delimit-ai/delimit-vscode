@@ -3,7 +3,7 @@
   "displayName": "Delimit — API Governance",
   "description": "API governance for AI coding assistants. Catch breaking changes, enforce policies, switch models without losing context.",
   "version": "0.1.0",
-  "publisher": "delimit-ai",
+  "publisher": "delimit",
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
