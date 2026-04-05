@@ -45,7 +45,9 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("delimit.lint", cmdLint),
     vscode.commands.registerCommand("delimit.doctor", cmdDoctor),
     vscode.commands.registerCommand("delimit.init", cmdInit),
-    vscode.commands.registerCommand("delimit.status", cmdStatus)
+    vscode.commands.registerCommand("delimit.status", cmdStatus),
+    vscode.commands.registerCommand("delimit.simulate", cmdSimulate),
+    vscode.commands.registerCommand("delimit.report", cmdReport)
   );
 
   // Auto-lint on save
@@ -114,6 +116,46 @@ async function cmdInit(): Promise<void> {
 
 async function cmdStatus(): Promise<void> {
   await refreshStatus(true);
+}
+
+async function cmdSimulate(): Promise<void> {
+  outputChannel.show(true);
+  outputChannel.appendLine("--- delimit simulate ---");
+  setStatus(STATUS_SPIN, "Simulating...");
+
+  const cwd = workspaceRoot();
+  const result = await runCli("simulate --commit", cwd);
+
+  outputChannel.appendLine(result.stdout);
+  if (result.stderr) {
+    outputChannel.appendLine(result.stderr);
+  }
+
+  if (result.stdout.includes("BLOCK")) {
+    setStatus(STATUS_WARN, "Simulation: would be blocked");
+    vscode.window.showWarningMessage(
+      "Delimit: Governance simulation found blocking issues. See Output panel."
+    );
+  } else {
+    setStatus(STATUS_ACTIVE, "Simulation: would pass");
+    vscode.window.showInformationMessage("Delimit: Governance simulation passed.");
+  }
+}
+
+async function cmdReport(): Promise<void> {
+  const cwd = workspaceRoot();
+  const result = await runCli("report --since 7d --format md", cwd);
+
+  if (result.exitCode === 0 && result.stdout.trim()) {
+    const doc = await vscode.workspace.openTextDocument({
+      content: result.stdout,
+      language: "markdown",
+    });
+    await vscode.window.showTextDocument(doc, { preview: true });
+  } else {
+    vscode.window.showWarningMessage("Delimit: Could not generate report.");
+    outputChannel.appendLine(result.stderr || "No report output");
+  }
 }
 
 // ---------------------------------------------------------------------------
